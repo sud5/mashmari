@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('config.php');
+require_once('../../config.php');
 global $PAGE,$CFG,$DB;
 $courseid = optional_param('course',1,PARAM_INT);
 $context = context_course::instance($courseid);

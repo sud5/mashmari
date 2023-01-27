@@ -83,6 +83,8 @@ if ($mform_signup->is_cancelled()) {
     redirect(get_login_url());
 
 } else if ($user = $mform_signup->get_data()) {
+    $user->username = $user->phone1;
+    $user->email = $user->phone1.'@mashmari.com';
     // Add missing required fields.
     $user = signup_setup_new_user($user);
 
