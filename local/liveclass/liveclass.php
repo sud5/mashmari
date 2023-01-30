@@ -1,3 +1,70 @@
+
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #EFEFEF;
+}
+
+.navbar a {
+  float: right;
+  font-size: 16px;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: right;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: black;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #1B215F;
+    color: black;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
 <?php
 
 // This file is part of Moodle - http://moodle.org/
@@ -34,7 +101,27 @@ if(is_siteadmin()){
 }else{
     $token = "916e652c9154b83381e7a88fe032008f";
 }
+$sesskey = sesskey();
+$logoutlink = $CFG->wwwroot."/login/logout.php?sesskey=$sesskey";
 ?>
+
+<div class="navbar">
+  <img src="mashmarilogo.png" alt="Girl in a jacket" width="5%" height="8%">
+  <a href=<?php echo $logoutlink; ?> >Logout</a>
+  <a href="#up">UP GOVT.</a>
+  <a href="#niit">NIIT</a>
+  <a href="#diksha">Diksha</a>
+<!--  <div class="dropdown">
+    <button class="dropbtn">Dropdown 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
+  </div> -->
+</div>
 
 <iframe id="iframe-03" frameborder="0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-top-navigation" src="javascript: window.frameElement.getAttribute(&quot;srcdoc&quot;);" srcdoc="<script>window.onmessage = function(event) {event.source.postMessage({iframeId: event.data, scrollHeight: document.body.getBoundingClientRect().height || document.body.scrollHeight}, event.origin);};</script><body style='margin: 0'><div id=&quot;embedWidget&quot;></div>
 
@@ -44,7 +131,7 @@ if(is_siteadmin()){
 
          var _options = {
 
-                 '_license_key':'646-496-409',
+                 '_license_key':'410-120-441',
 
                  '_role_token':'<?php echo $token ?>',
 
