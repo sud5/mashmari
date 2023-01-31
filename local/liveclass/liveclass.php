@@ -108,9 +108,10 @@ $logoutlink = $CFG->wwwroot."/login/logout.php?sesskey=$sesskey";
 <div class="navbar">
   <img src="mashmarilogo.png" alt="Girl in a jacket" width="5%" height="8%">
   <a href=<?php echo $logoutlink; ?> >Logout</a>
-  <a href="#up">UP GOVT.</a>
-  <a href="#niit">NIIT</a>
-  <a href="#diksha">Diksha</a>
+  <a href="https://www.swayamprabha.gov.in/" target ="_blank">Swayamrpabha</a>
+  <a href="https://www.cbse.gov.in/ecbse/index.html" target ="_blank">CBSE</a>
+  <a href="https://nios.ac.in/online-course-material.aspx" target ="_blank">NIIT</a>
+  <a href="https://diksha.gov.in/" target ="_blank">Diksha</a>
 <!--  <div class="dropdown">
     <button class="dropbtn">Dropdown 
       <i class="fa fa-caret-down"></i>
