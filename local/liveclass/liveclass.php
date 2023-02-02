@@ -7,6 +7,7 @@ body {
 .navbar {
   overflow: hidden;
   background-color: #EFEFEF;
+  margin-top: -7px
 }
 
 .navbar a {
@@ -36,7 +37,7 @@ body {
 
 .navbar a:hover, .dropdown:hover .dropbtn {
   background-color: #1B215F;
-    color: black;
+    color: white;
 }
 
 .dropdown-content {
@@ -106,7 +107,9 @@ $logoutlink = $CFG->wwwroot."/login/logout.php?sesskey=$sesskey";
 ?>
 
 <div class="navbar">
-  <img src="mashmarilogo.png" alt="Girl in a jacket" width="5%" height="auto">
+    <!--<a href=<?php // echo $CFG->wwwroot."/my"; ?>>--> 
+        <img  src="mashmarilogo.png" alt="Girl in a jacket" width="5%" height="auto">
+    <!--</a>-->
   <a href=<?php echo $logoutlink; ?> >Logout</a>
   <a href="https://www.swayamprabha.gov.in/" target ="_blank">Swayamrpabha</a>
   <a href="https://www.cbse.gov.in/ecbse/index.html" target ="_blank">CBSE</a>
@@ -188,5 +191,5 @@ $logoutlink = $CFG->wwwroot."/login/logout.php?sesskey=$sesskey";
 
          })();
 
-</script></body>" style="/* display: none; */width: 100%;height: 100%;overflow: visible;transition: height 2.5s ease 0s;"></iframe>
+</script></body>" style="/* display: none; */width: 100%;height: 91%;overflow: visible;transition: height 2.5s ease 0s;"></iframe>
                                                                                                                                     
