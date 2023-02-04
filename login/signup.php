@@ -85,9 +85,11 @@ if ($mform_signup->is_cancelled()) {
 } else if ($user = $mform_signup->get_data()) {
     $user->username = $user->phone1;
     $user->email = $user->phone1.'@mashmari.com';
+    $user->selected_roleid = $user->roleid;
+    $user->selected_courseid = $user->courseid;
     // Add missing required fields.
     $user = signup_setup_new_user($user);
-
+            
     // Plugins can perform post sign up actions once data has been validated.
     core_login_post_signup_requests($user);
 

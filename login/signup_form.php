@@ -32,7 +32,7 @@ require_once('lib.php');
 
 class login_signup_form extends moodleform implements renderable, templatable {
     function definition() {
-        global $USER, $CFG;
+        global $USER, $CFG, $DB;
 
         $mform = $this->_form;
 
@@ -95,6 +95,20 @@ class login_signup_form extends moodleform implements renderable, templatable {
         }
 
         profile_signup_fields($mform);
+        
+                //program selection        
+        $course_default = array(null => 'Select from dropdown');  
+        $sql = "SELECT id, fullname from {course} where visible = 1 and id > 1";
+
+        $courses_system = $DB->get_records_sql_menu($sql);
+        $courses = $course_default + $courses_system;
+        
+        $mform->addElement('select', 'courseid', get_string('course_to_enrol','local_liveclass'), $courses,array('style'=>''));
+        $mform->addRule('courseid', get_string('required'), 'required', null, 'client');
+        
+        $roles = array(null => 'Select from dropdown', 5 => 'Student',  3 => 'Teacher');      
+        $mform->addElement('select', 'roleid', get_string('role_to_enrol','local_liveclass'), $roles,array('style'=>''));
+        $mform->addRule('roleid', get_string('required'), 'required', null, 'client');
 
         if (signup_captcha_enabled()) {
             $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));

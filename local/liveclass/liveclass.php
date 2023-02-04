@@ -10,7 +10,7 @@ body {
   margin-top: -7px
 }
 
-.navbar a {
+.navbar .right-panel a {
   float: right;
   font-size: 16px;
   color: black;
@@ -35,7 +35,7 @@ body {
   margin: 0;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn {
+.navbar .right-panel a:hover, .dropdown:hover .dropbtn {
   background-color: #1B215F;
     color: white;
 }
@@ -107,9 +107,8 @@ $logoutlink = $CFG->wwwroot."/login/logout.php?sesskey=$sesskey";
 ?>
 
 <div class="navbar">
-    <!--<a href=<?php // echo $CFG->wwwroot."/my"; ?>>--> 
-        <img  src="mashmarilogo.png" alt="Girl in a jacket" width="5%" height="auto">
-    <!--</a>-->
+
+<div class="right-panel">
   <a href=<?php echo $logoutlink; ?> >Logout</a>
   <a href="https://www.swayamprabha.gov.in/" target ="_blank">Swayamrpabha</a>
   <a href="https://www.cbse.gov.in/ecbse/index.html" target ="_blank">CBSE</a>
@@ -126,6 +125,11 @@ $logoutlink = $CFG->wwwroot."/login/logout.php?sesskey=$sesskey";
     </div>
   </div> -->
 </div>
+
+      <a href=<?php echo $CFG->wwwroot."/my"; ?>> 
+        <img  src="mashmarilogo.png" alt="Girl in a jacket" width="5%" height="auto">
+    </a>
+    </div>
 
 <iframe id="iframe-03" frameborder="0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-top-navigation" src="javascript: window.frameElement.getAttribute(&quot;srcdoc&quot;);" srcdoc="<script>window.onmessage = function(event) {event.source.postMessage({iframeId: event.data, scrollHeight: document.body.getBoundingClientRect().height || document.body.scrollHeight}, event.origin);};</script><body style='margin: 0'><div id=&quot;embedWidget&quot;></div>
 
