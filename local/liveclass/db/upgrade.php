@@ -6,7 +6,7 @@ function xmldb_local_liveclass_upgrade($oldversion) {
     $dbman = $DB->get_manager();
 
     // Define learningpath_cohorts table scheme.
-    if ($oldversion < 2023020400) {
+    if ($oldversion < 2023020401) {
         $table = new xmldb_table('user');
         $field = new xmldb_field('selected_courseid', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $field1 = new xmldb_field('selected_roleid', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
@@ -18,7 +18,7 @@ function xmldb_local_liveclass_upgrade($oldversion) {
             $dbman->add_field($table, $field1);
         }
 
-        upgrade_plugin_savepoint(true, 2023020400, 'local', 'liveclass');
+        upgrade_plugin_savepoint(true, 2023020401, 'local', 'liveclass');
     }
 
     return true;

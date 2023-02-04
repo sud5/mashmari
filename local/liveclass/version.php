@@ -19,7 +19,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2023020400;
+$plugin->version  = 2023020401;
 $plugin->requires = 2014051200;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'local_liveclass';
