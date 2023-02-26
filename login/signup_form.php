@@ -45,6 +45,8 @@ class login_signup_form extends moodleform implements renderable, templatable {
         $mform->addRule('phone1', 'Phone Number is required', 'required', null, 'client');
         $mform->addRule('phone1', 'Numbers only', 'numeric', null, 'client');
 
+        $mform->addElement('button', 'sendotp', 'Send OTP');
+
         if (!empty($CFG->passwordpolicy)){
             $mform->addElement('static', 'passwordpolicyinfo', '', print_password_policy());
         }
