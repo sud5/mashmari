@@ -23,77 +23,35 @@
  * @author     Azmat Ullah <azmat@3ilogic.com>
  */
 require_once '../../config.php';
+require_once(dirname(__FILE__).'\locallib.php');
 global $DB, $USER;
 $attributes = array();
 
 $otp  = optional_param('otp', null, PARAM_RAW);
 $mobile = optional_param('mobile', null, PARAM_INT);
+$action = optional_param('action', '', PARAM_TEXT);
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/otpverification/ajax_bridge.php');
 
 
-$i = 0;
-$points = 0;
-$otpvalue = $DB->get_field_sql("select otp from {otpverification} where mobile = :mobile", array('mobile'=>$mobile));
-if(!empty($otp)) {
-	if($otpvalue == $otp) {
-		echo 1;		
-	} 
-}
-die();
-if ($action == 'redeem') {
-	$prizedetails = get_prize_details($prizeid);
-	$prizecost = $prizedetails->points;
-	$prizeimage = get_image_url($prizedetails->image);
-
-	if(empty($points) || ($points < $prizecost)) {
-		echo "<h3 class='warning-alert'>Sorry you don't have enough points to redeem this award</h3>";
-		die();
+if($action=='verifyotp') {
+	$otpvalue = $DB->get_field_sql("select otp from {otpverification} where mobile = :mobile", array('mobile'=>$mobile));
+	if(!empty($otp)) {
+		if($otpvalue == $otp) {
+			// We should update the record in db as verified
+			$DB->set_field('otpverification', 'verified', 1, array('mobile'=>$mobile));
+			echo 1;
+			//
+		} 
 	}
+}
 
-    $profilefields = new stdClass();
-    $remainingpoints = $points - $prizecost;
-    $profilefields->profile_field_reward_points = $remainingpoints;
-
-    if (!empty($profilefields)) {
-        $profilefields->id = $userid;
-        profile_save_data($profilefields);
-        $data = new stdClass;
-        $data->userid = $userid;
-        $data->prizeid = $prizeid;
-
-        save_prize_redemption($data);
-        echo "<h3 class='suceess'>Prize redeemed</h3>";
-        $senderemail = 'contact@vleacademy.com'; // Replace admin email id
-        $receiver = $USER;
-        $message = "<h4>You have suceessfully redeemed the following prize</h4>
-        	<table>
-        		<tr>
-        			<th>Serial no</th>
-        			<th>Prize name</th>
-        			<th>Prize image</th>
-        			<th>Prize points</th>
-        			<th>Points remaining</th>
-        		</tr>
-        		<tr>
-        			<td>01</td>
-        			<td>$prizedetails->prizename</td>
-        			<td><img style='height:100px;width:100px;' src='".$prizeimage."' alt='Prizeimage' /></td>
-        			<td>$prizedetails->points</td>
-        			<td>$remainingpoints</td>
-        		</tr>
-        	</table>";
-        	$subject = 'Prize redemption';
-        send_acknowledement_mail_to_user($senderemail, $receiver, $message, $subject);
-        $receiveremail = "contact.vleacademy@gmail.com"; // Replace admin email id
-        $message = 'The following user has claimed prize
-        			<table><tr><td>'.$USER->firstname.' '.$USER->lastname.'('.$USER->email.')</td></tr>
-        			<tr><td>'.$prizedetails->prizename.'</td><td><img style="height:100px;width:100px;" src='.$prizeimage.' /></td></tr></table>
-        			';
-        send_acknowledement_mail_to_admin($senderemail, $receiveremail, $message, $subject);
-        die();
-    }
-    
-
+if($action=='sendotp') {
+	
+	$otp = otpverification::send_otp($mobile);
+	if($otp['sandbox'] == 1) {
+		echo $otp['otp'];
+	}
+	die();
 }

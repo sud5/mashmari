@@ -17,3 +17,5 @@
 
 $string['pluginname'] = 'Otp Verification';
 $string['pluginname_desc'] = 'Verifies the mobile number in signup form';
+$string['enable_sandbox'] = 'Enable sandbox';
+$string['des-enable_sandbox'] = 'Enable sandbox';

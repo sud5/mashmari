@@ -18,30 +18,81 @@
 /**
  * Signup event handlers
  *
- * @package    enrol_signup
+ * @package    
  * @copyright  2011 Qontori Pte Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->libdir . '/formslib.php');
-require_once($CFG->libdir . '/moodlelib.php');
-require_once($CFG->libdir . '/enrollib.php');
-
+//require_once(dirname(__FILE__) . '/../../config.php');
 /**
- * Event handler for signup enrol plugin.
+ * Utility functions for handling otp
  */
-class local_signup_handler {
+Class otpverification {
 
-  public static function user_created(\core\event\user_created $event) {
-    global $CFG, $DB;
+  public static function send_otp($mobile) {
+    global $DB, $CFG, $USER;
+    
+    $otp = rand(100000,999999);
+    $sandbox = get_config( 'local_otpverification', 'enable_sandbox');
+    
+    
+    $otprecord = $DB->get_record('otpverification', array('mobile'=>$mobile));
+    if($otprecord) {
+        return array('sandbox'=>$sandbox, 'otp'=>$otprecord->otp);
+    }
 
-    $sql = "update {user} set confirmed = 1 where id = $event->objectid";
-    $DB->execute($sql);
-    $user = $event->get_record_snapshot('user', $event->objectid);
-    enrol_try_internal_enrol($user->selected_courseid, $user->id, $user->selected_roleid);
-    complete_user_login($user);
-    redirect($CFG->wwwroot.'/my/courses.php');
+    if(!$sandbox) {
+      $success = self::smsapicall($mobile, $otp);
+    }
+
+    $otpinsert = new stdClass();
+    $otpinsert->mobile = $mobile;
+    $otpinsert->otp = $otp;
+    $otpinsert->expired = 0;
+    $otpinsert->timemodified = time();
+    $insertid = $DB->insert_record('otpverification', $otpinsert);
+    if($insertid) {
+      return array('sandbox'=>$sandbox, 'otp'=>$otp);
+    }
   }
 
-}
+  public static function smsapicall($mobile, $otp) {
+
+    $mobile='91'.$mobile;
+    $otp='Your otp to verify password is '.$otp;
+    $userid='otp@mashmari.in';
+    $password='Apple!23';
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => "http://sms.tivre.com/httppush/send_smsSch.asp?Userid=$userid&password=$password&Msg=$otp&mobnum=$mobile&senderid=mashmari&msgId=123456&qrytype=impalert&TivreId=1",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "POST",
+      CURLOPT_HTTPHEADER => array(
+        "cache-control: no-cache",
+        "X-Custom-Header: value",
+        "Content-Type: text/html",
+        "Accept: text/html"
+      ),
+));
+
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Length: 0'));
+    curl_setopt($curl, CURLOPT_POSTFIELDS, array());
+
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    curl_close($curl);
+
+    if ($err) {
+      echo "Something went wrong. Please try later";
+    } else {
+      return $response;
+    }
+  }
+}                                                                                                                        

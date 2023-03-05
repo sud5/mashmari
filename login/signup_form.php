@@ -151,6 +151,7 @@ class login_signup_form extends moodleform implements renderable, templatable {
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     public function validation($data, $files) {
+        global $DB;
         $errors = parent::validation($data, $files);
 
         // Extend validation for any form extensions from plugins.
@@ -175,7 +176,10 @@ class login_signup_form extends moodleform implements renderable, templatable {
             $errors['phone1'] = "Number of digits should be 10";
         }
     
-
+        $verified = $DB->get_field('otpverification', 'verified', array('mobile'=>$data['phone1']));
+        if(!$verified) {
+            $errors['phone1'] = "Please validate your phone number";
+        }
         // $errors += signup_validate_data($data, $files);
 
         return $errors;
