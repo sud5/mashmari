@@ -23,7 +23,7 @@
  * @author     Azmat Ullah <azmat@3ilogic.com>
  */
 require_once '../../config.php';
-require_once(dirname(__FILE__).'\locallib.php');
+require_once(dirname(__FILE__).'/locallib.php');
 global $DB, $USER;
 $attributes = array();
 

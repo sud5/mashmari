@@ -69,7 +69,6 @@ require(['jquery', 'core/notification', 'core/modal_factory', 'core/modal_events
                 'mobile': mobile,
                 'action':'sendotp'
             };
-console.log(data);
             // Ajax call for sending otp
             var returnotp =  ajaxCall(data).then(function(returndata){
                 //alert(returndata);
