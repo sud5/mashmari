@@ -59,7 +59,7 @@ Class otpverification {
   public static function smsapicall($mobile, $otp) {
 
     $mobile='91'.$mobile;
-    $otp='Your otp to verify password is '.$otp;
+    $otp='Your otp to verify phone is '.$otp;
     $userid='otp@mashmari.in';
     $password='Apple!23';
 

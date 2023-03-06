@@ -28,7 +28,7 @@ global $DB, $USER;
 $attributes = array();
 
 $otp  = optional_param('otp', null, PARAM_RAW);
-$mobile = optional_param('mobile', null, PARAM_INT);
+$mobile = optional_param('mobile', null, PARAM_RAW);
 $action = optional_param('action', '', PARAM_TEXT);
 
 $PAGE->set_context(context_system::instance());
@@ -48,7 +48,7 @@ if($action=='verifyotp') {
 }
 
 if($action=='sendotp') {
-	
+    
 	$otp = otpverification::send_otp($mobile);
 	if($otp['sandbox'] == 1) {
 		echo $otp['otp'];
