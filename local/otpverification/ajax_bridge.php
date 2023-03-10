@@ -48,10 +48,10 @@ if($action=='verifyotp') {
 }
 
 if($action=='sendotp') {
-    
 	$otp = otpverification::send_otp($mobile);
 	if($otp['sandbox'] == 1) {
 		echo $otp['otp'];
-	}
-	die();
+	}else{
+            echo "OTP SEND";
+        }
 }

@@ -57,9 +57,8 @@ Class otpverification {
   }
 
   public static function smsapicall($mobile, $otp) {
-
     $mobile='91'.$mobile;
-    $otp='Your otp to verify phone is '.$otp;
+    $otp=urlencode("Your otp to verify phone $otp");
     $userid='otp@mashmari.in';
     $password='Apple!23';
 
@@ -87,12 +86,11 @@ Class otpverification {
     $response = curl_exec($curl);
     $err = curl_error($curl);
 
-    curl_close($curl);
-
     if ($err) {
-      echo "Something went wrong. Please try later";
+      echo "Something went wrong. Please try again";
     } else {
       return $response;
     }
+   curl_close($curl);
   }
 }                                                                                                                        
