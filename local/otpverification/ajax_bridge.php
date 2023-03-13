@@ -57,7 +57,7 @@ if($action=='sendotp') {
 	if($otp['sandbox'] == 1) {
 		echo $otp['otp'];
 	}else{
-        echo "OTP SEND";
+        echo "OTP SENT";
     }
 }
 
@@ -66,6 +66,6 @@ if($action=='resendotp') {
 	if($otp['sandbox'] == 1) {
 		echo $otp['otp'];
 	}else{
-        echo "OTP SEND";
+        echo "OTP SENT";
     }
 }
