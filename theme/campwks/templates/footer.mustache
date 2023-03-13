@@ -58,54 +58,90 @@ require(['jquery', 'core/notification', 'core/modal_factory', 'core/modal_events
         $('#id_sendotp').show();
     });
     $(document).on('click', '#id_sendotp', function() {
-        ModalFactory.create({
-            type: ModalFactory.types.SAVE_CANCEL,
-            title: 'Verify OTP',
-            body: '<label class="d-inline">Please enter otp sent to your mobile no</label><input type="number" class="form-control" type="text" id="otp" value="" name="otp"/><p id="resendotp">Resend otp</p><p class="invalidbox"></p><p id="otpbox"></p>',
-        }).then(function(modal) {
-            modal.setSaveButtonText('Verify OTP');
-            var mobile = $('#id_phone1').val();
-            var data = {
-                'mobile': mobile,
-                'action':'sendotp'
-            };
-            // Ajax call for sending otp
-            var returnotp =  ajaxCall(data).then(function(returndata){
-                //alert(returndata);
-                console.log('data',returndata);
-                if(returndata) {
-                    modal.show();
-                    $('#otpbox').html(returndata);
-                } else {
-                    alert('Something went wrong. Please try later.');
-                }
-            });
-            //Script for validating otp
-            modal.getRoot().on(ModalEvents.save, function(e) {
-                var otp = $('#otp').val();
-                var value  = {
-                'otp': otp,
-                'mobile': mobile,
-                'action':'verifyotp'
+        var mobile = $('#id_phone1').val();
+        var errorvalue = '';
+        if(!mobile) {
+            errorvalue = '- Phone Number is required';
+        } else if(isNaN(mobile)) {
+            errorvalue = '- Numbers only';
+        } else if(mobile.toString().length < 10) {
+            errorvalue = '- Please enter valid phone number';
+        }
+
+        if(errorvalue) {
+            $('#id_error_phone1').html(errorvalue);
+            $('#id_error_phone1').show();
+        } else {
+            $('#id_error_phone1').hide();
+            $('#id_error_phone1').html('');
+        
+            ModalFactory.create({
+                type: ModalFactory.types.SAVE_CANCEL,
+                title: 'Verify OTP',
+                body: '<label class="d-inline">Please enter otp sent to your mobile no</label><input type="number" class="form-control" type="text" id="otp" value="" name="otp"/><p id="resendotp">Resend otp</p><p class="invalidbox"></p><p id="otpbox"></p>',
+            }).then(function(modal) {
+                modal.setSaveButtonText('Verify OTP');
+                
+                var data = {
+                    'mobile': mobile,
+                    'action':'sendotp'
                 };
-                ajaxCall(value).then(function(datavalue){
-                    console.log('data',datavalue);
-                    if(datavalue == 1) {
-                        modal.hide();
-                        $('#fitem_id_sendotp').html('<p class="btn btn-success"><i class="fa fa-check"></i> Verified</p>');
-                        $('#id_sendotp').hide();
-                    } else {
+
+                // Ajax call for sending otp
+                var returnotp =  ajaxCall(data).then(function(returndata){
+                    if(returndata) {
                         modal.show();
-                        $('#otp').val("");
-                        $('.invalidbox').html('Invalid OTP');
+                        $('#otpbox').html(returndata);
+                    } else {
+                        alert('Something went wrong. Please try later.');
                     }
+                }); 
+
+                // Script for resending OTP
+                $(document).on('click', 'p#resendotp', function() {
+                    var mobile = $('#id_phone1').val();
+                    var resendotpvalue  = {
+                    'mobile': mobile,
+                    'action':'resendotp'
+                    };
+                    ajaxCall(resendotpvalue).then(function(datavalue){
+                        console.log('data',datavalue);
+                        if(datavalue) {
+                        modal.show();
+                        $('#otpbox').html(datavalue);
+                        } else {
+                            alert('Something went wrong. Please try later.');
+                        }
+                    });
+                });
+
+                //Script for validating otp
+                modal.getRoot().on(ModalEvents.save, function(e) {
+                    var otp = $('#otp').val();
+                    var value  = {
+                    'otp': otp,
+                    'mobile': mobile,
+                    'action':'verifyotp'
+                    };
+                    ajaxCall(value).then(function(datavalue){
+                        console.log('data',datavalue);
+                        if(datavalue == 1) {
+                            modal.hide();
+                            $('#fitem_id_sendotp').html('<p class="btn btn-success"><i class="fa fa-check"></i> Verified</p>');
+                            $('#id_sendotp').hide();
+                        } else {
+                            modal.show();
+                            $('#otp').val("");
+                            $('.invalidbox').html('Invalid OTP');
+                        }
+                    });
+                });
+
+                modal.getRoot().on(ModalEvents.cancel, function(e) {
+                    $(this).remove();
                 });
             });
-
-            modal.getRoot().on(ModalEvents.cancel, function(e) {
-                $(this).remove();
-            });
-        });
+        }
     });
 
 
@@ -127,4 +163,5 @@ require(['jquery', 'core/notification', 'core/modal_factory', 'core/modal_events
 {{/js}}
 <style>
 #id_sendotp{display:none;}
+p#resendotp{cursor:pointer;}
 </style>

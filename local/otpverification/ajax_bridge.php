@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @author     Azmat Ullah <azmat@3ilogic.com>
  */
+
 require_once '../../config.php';
 require_once(dirname(__FILE__).'/locallib.php');
 global $DB, $USER;
@@ -34,6 +35,10 @@ $action = optional_param('action', '', PARAM_TEXT);
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/local/otpverification/ajax_bridge.php');
 
+if(empty($mobile)) {
+	echo 'Please enter mobile number';
+	die();
+}
 
 if($action=='verifyotp') {
 	$otpvalue = $DB->get_field_sql("select otp from {otpverification} where mobile = :mobile", array('mobile'=>$mobile));
@@ -48,10 +53,19 @@ if($action=='verifyotp') {
 }
 
 if($action=='sendotp') {
-	$otp = otpverification::send_otp($mobile);
+	$otp = otpverification::send_otp($mobile, false);
 	if($otp['sandbox'] == 1) {
 		echo $otp['otp'];
 	}else{
-            echo "OTP SEND";
-        }
+        echo "OTP SEND";
+    }
+}
+
+if($action=='resendotp') {
+	$otp = otpverification::send_otp($mobile, true);
+	if($otp['sandbox'] == 1) {
+		echo $otp['otp'];
+	}else{
+        echo "OTP SEND";
+    }
 }

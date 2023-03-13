@@ -29,33 +29,56 @@ defined('MOODLE_INTERNAL') || die();
  */
 Class otpverification {
 
-  public static function send_otp($mobile) {
+  /**
+   * Summary of send_otp
+   * @param mixed $mobile
+   * @return array
+   */
+  public static function send_otp($mobile, $resend) {
     global $DB, $CFG, $USER;
     
-    $otp = rand(100000,999999);
     $sandbox = get_config( 'local_otpverification', 'enable_sandbox');
-    
-    
+
     $otprecord = $DB->get_record('otpverification', array('mobile'=>$mobile));
-    if($otprecord) {
+    if($otprecord && !($resend)) {
         return array('sandbox'=>$sandbox, 'otp'=>$otprecord->otp);
     }
+
+    $otp = rand(100000,999999);
 
     if(!$sandbox) {
       $success = self::smsapicall($mobile, $otp);
     }
 
-    $otpinsert = new stdClass();
-    $otpinsert->mobile = $mobile;
-    $otpinsert->otp = $otp;
-    $otpinsert->expired = 0;
-    $otpinsert->timemodified = time();
-    $insertid = $DB->insert_record('otpverification', $otpinsert);
-    if($insertid) {
-      return array('sandbox'=>$sandbox, 'otp'=>$otp);
+    if($otprecord) {
+      $updateotp = new stdClass();
+      $updateotp->id = $otprecord->id;
+      $updateotp->otp = $otp;
+      $updateotp->timemodified = time();
+      $updatesuccess = $DB->update_record('otpverification', $updateotp);
+      if($updatesuccess) {
+        return array('sandbox'=>$sandbox, 'otp'=>$otp);
+      }
+    } else {
+      $otpinsert = new stdClass();
+      $otpinsert->mobile = $mobile;
+      $otpinsert->otp = $otp;
+      $otpinsert->elxpired = 0;
+      $otpinsert->timemodified = time();
+      $insertid = $DB->insert_record('otpverification', $otpinsert);
+      if($insertid) {
+        return array('sandbox'=>$sandbox, 'otp'=>$otp);
+      }
     }
-  }
+    
+  }  
 
+  /**
+   * Summary of smsapicall
+   * @param mixed $mobile
+   * @param mixed $otp
+   * @return bool|string
+   */
   public static function smsapicall($mobile, $otp) {
     $mobile='91'.$mobile;
     $otp=urlencode("Your otp to verify phone $otp");
@@ -93,4 +116,6 @@ Class otpverification {
     }
    curl_close($curl);
   }
+
+  
 }                                                                                                                        
